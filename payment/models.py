@@ -52,3 +52,24 @@ class OutboxEvent(models.Model):
 
 
 # --- Add your domain models below -------------------------------------------
+
+
+class Payment(models.Model):
+    class Status(models.TextChoices):
+        SUCCEEDED = "SUCCEEDED"
+        FAILED = "FAILED"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    order_id = models.CharField(max_length=64, db_index=True)
+    user_id = models.CharField(max_length=64)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    currency = models.CharField(max_length=3, default="USD")
+    status = models.CharField(max_length=10, choices=Status.choices)
+    reason = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.order_id} {self.amount} [{self.status}]"
