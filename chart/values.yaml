@@ -84,9 +84,9 @@ postgres:
 migrations:
   enabled: true
 
-# Outbox relay Deployment (Phase 4+). Off until Kafka exists.
+# payment produces payment.succeeded/failed → it needs the outbox relay.
 relay:
-  enabled: false
+  enabled: true
   replicaCount: 1
 
 podSecurityContext:
